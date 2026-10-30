@@ -5,3 +5,6 @@ pyotp
 qrcode
 Pillow
 gunicorn
+argon2-cffi
+cryptography
+Flask-Limiter
