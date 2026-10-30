@@ -1,0 +1,7 @@
+Flask
+Flask-WTF
+Werkzeug
+pyotp
+qrcode
+Pillow
+gunicorn
