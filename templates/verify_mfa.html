@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Verify Identity | SecureGate</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+    <!-- NAVBAR -->
+    <nav class="navbar">
+
+        <a class="brand" href="/">
+            Secure<span>Gate</span>
+        </a>
+
+        <span class="security-label">
+            🔒 Secure Verification
+        </span>
+
+    </nav>
+
+
+    <!-- MAIN CONTENT -->
+    <main class="container">
+
+        <section class="card mfa-card">
+
+            <!-- SECURITY ICON -->
+            <div class="mfa-icon">
+                🔐
+            </div>
+
+            <h1>Verify your identity</h1>
+
+            <p class="subtitle">
+                Your password was accepted.
+                Enter the 6-digit code from your authenticator app
+                to continue.
+            </p>
+
+
+            <!-- FLASH MESSAGES -->
+            {% with messages = get_flashed_messages(with_categories=true) %}
+
+                {% for category, message in messages %}
+
+                    <div class="flash {{ category }}">
+                        {{ message }}
+                    </div>
+
+                {% endfor %}
+
+            {% endwith %}
+
+
+            <!-- TOTP FORM -->
+            <form method="POST">
+
+                <!-- CSRF PROTECTION -->
+                <input
+                    type="hidden"
+                    name="csrf_token"
+                    value="{{ csrf_token() }}"
+                >
+
+                <div class="form-group">
+
+                    <label for="code">
+                        Authentication code
+                    </label>
+
+                    <input
+                        id="code"
+                        name="code"
+                        type="text"
+                        inputmode="numeric"
+                        autocomplete="one-time-code"
+                        pattern="[0-9]{6}"
+                        maxlength="6"
+                        minlength="6"
+                        placeholder="000000"
+                        required
+                        autofocus
+                    >
+
+                </div>
+
+                <button type="submit">
+                    Verify &amp; Continue
+                </button>
+
+            </form>
+
+
+            <!-- AUTHENTICATOR HELP -->
+            <div class="mfa-help">
+
+                <h3>📱 Where do I find the code?</h3>
+
+                <p>
+                    Open your authenticator app, such as
+                    Google Authenticator or Microsoft Authenticator,
+                    and find your SecureGate account.
+                </p>
+
+                <p>
+                    Enter the current
+                    <strong>6-digit code</strong>.
+                    The code changes automatically every few seconds.
+                </p>
+
+            </div>
+
+
+            <!-- SECURITY NOTICE -->
+            <div class="security-note">
+
+                <strong>🛡️ Security notice</strong>
+
+                <p>
+                    Never share your authentication code with anyone.
+                    SecureGate will never ask you to send your code
+                    to another person.
+                </p>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- FOOTER -->
+    <footer>
+        SecureGate · Multi-Factor Authentication
+    </footer>
+
+</body>
+</html>

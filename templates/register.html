@@ -1,0 +1,54 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Account | SecureGate</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <nav class="navbar">
+        <a class="brand" href="{{ url_for('login') }}">Secure<span>Gate</span></a>
+        <a href="{{ url_for('login') }}">Sign in</a>
+    </nav>
+
+    <main class="container">
+        <section class="card">
+            <h1>Create your account</h1>
+            <p class="subtitle">Get started with secure, multi-factor authentication.</p>
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% for category, message in messages %}
+                    <div class="flash {{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endwith %}
+
+            <form method="POST" action="{{ url_for('register') }}">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input id="username" name="username" type="text"
+                           autocomplete="username" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input id="password" name="password" type="password"
+                           autocomplete="new-password" required>
+                </div>
+
+                <button type="submit">Create account</button>
+            </form>
+
+            <p class="muted">
+                Already registered?
+                <a href="{{ url_for('login') }}">Sign in here</a>
+            </p>
+        </section>
+    </main>
+
+    <footer>SecureGate · Your security starts here</footer>
+</body>
+</html>

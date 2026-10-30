@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+    
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | SecureGate</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+    <nav class="navbar">
+        <a class="brand" href="{{ url_for('dashboard') }}">
+            Secure<span>Gate</span>
+        </a>
+
+        <form method="POST" action="{{ url_for('logout') }}">
+            <input type="hidden"
+                   name="csrf_token"
+                   value="{{ csrf_token() }}">
+
+            <button type="submit">Log out</button>
+        </form>
+    </nav>
+
+    <main class="container">
+
+        <h1>Security Dashboard</h1>
+
+        <p class="subtitle">
+            Manage your account and multi-factor authentication.
+        </p>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% for category, message in messages %}
+                <div class="flash {{ category }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endwith %}
+
+
+        <!-- ACCOUNT -->
+        <section class="card dashboard-card">
+
+            <h2>Account Overview</h2>
+
+            <p class="muted">
+                You're securely signed in to SecureGate.
+            </p>
+
+            <p>
+                <strong>Username:</strong>
+                {{ user["username"] }}
+            </p>
+
+            {% if user["mfa_enabled"] %}
+                <span class="status">
+                    MFA Enabled
+                </span>
+            {% else %}
+                <span class="status disabled">
+                    MFA Not Enabled
+                </span>
+            {% endif %}
+
+        </section>
+
+
+        <!-- MFA -->
+        <section class="card dashboard-card">
+
+            <h2>Multi-Factor Authentication</h2>
+
+            {% if user["mfa_enabled"] %}
+
+                <p class="muted">
+                    Your account is protected with
+                    TOTP-based multi-factor authentication.
+                </p>
+
+                <span class="status">
+                    ✓ MFA Active
+                </span>
+
+            {% else %}
+
+                <p class="muted">
+                    Add an authenticator app to protect your account
+                    with a second authentication factor.
+                </p>
+
+                <div class="actions">
+                    <a class="button"
+                       href="{{ url_for('setup_mfa') }}">
+                        Set up MFA
+                    </a>
+                </div>
+
+            {% endif %}
+
+        </section>
+
+
+        <!-- SECURITY EVENTS -->
+        <section class="card dashboard-card">
+
+            <h2>Recent Security Events</h2>
+
+            {% if events %}
+
+                <div class="table-wrap">
+
+                    <table>
+
+                        <thead>
+                            <tr>
+                                <th>Event</th>
+                                <th>Time</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+
+                            {% for event in events %}
+
+                                <tr>
+                                    <td>
+                                        {{ event["event_type"] }}
+                                    </td>
+
+                                    <td>
+                                        {{ event["created_at"] }}
+                                    </td>
+                                </tr>
+
+                            {% endfor %}
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            {% else %}
+
+                <p class="muted">
+                    No security events recorded yet.
+                </p>
+
+            {% endif %}
+
+        </section>
+
+
+        <!-- LOGOUT -->
+        <section class="card dashboard-card">
+
+            <h2>Account Actions</h2>
+
+            <p class="muted">
+                Always log out when using a shared computer.
+            </p>
+
+            <div class="actions">
+
+                <form method="POST"
+                      action="{{ url_for('logout') }}">
+
+                    <input type="hidden"
+                           name="csrf_token"
+                           value="{{ csrf_token() }}">
+
+                    <button type="submit">
+                        Log out securely
+                    </button>
+
+                </form>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <footer>
+        SecureGate · Multi-Factor Authentication
+    </footer>
+
+</body>
+</html>
